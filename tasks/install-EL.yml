@@ -1,0 +1,53 @@
+---
+# tasks file for php-ansible-role
+
+- name: Add epel repository
+  yum:
+    name: "{{ epel_url }}"
+    state: present
+
+- name: Add epel repository signing key
+  rpm_key:
+    key: "{{ epel_key_path }}"
+
+- name: Enable RHEL optional rpms repository
+  ini_file:
+    dest: /etc/yum.repos.d/redhat.repo
+    section: rhel-7-server-optional-rpms
+    option: enabled
+    value: 1
+  when: >
+    php_repository == "base" and
+    ansible_distribution == "RedHat"
+    
+- name: Add {% if repo_key_url is defined %}{{repo}} {% endif %}repository signing key
+  rpm_key: 
+    key: "{{ repo_key_url }}"
+  when: repo_key_url is defined
+
+- name: Add {% if repo_key_url is defined %}{{repo}} {% endif %}repository
+  yum:
+    name: "{{ repo_pkg_url }}"
+    state: present
+  when: repo_pkg_url is defined
+
+- name: Install php
+  yum:
+    name: "{{ repo_pkg_prefix }}"
+    state: present
+    enablerepo: "{{ repo_enablerepo | default(omit) }}"
+
+- name: Install php modules ({% if php_modules is defined and php_modules %}custom module list{% else %}preset module list{% endif %})
+  yum:
+    name: "{{ repo_pkg_prefix }}-{{ item }}"
+    state: present
+    enablerepo: "{{ repo_enablerepo | default(omit) }}"
+  with_items: "{{ php_modules_to_install }}"
+
+- name: Install php additional modules
+  yum:
+    name: "{{ repo_pkg_prefix }}-{{ item }}"
+    state: present
+    enablerepo: "{{ repo_enablerepo | default(omit) }}"
+  with_items: "{{ php_modules_additional }}"
+  when: php_modules_additional is defined

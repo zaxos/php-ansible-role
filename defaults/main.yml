@@ -1,0 +1,143 @@
+---
+# defaults file for php-ansible-role
+
+php_version: "5.4"
+php_repository: "base"
+
+# PHP modules #
+
+php_modules_to_install: "{{ php_modules | default (php_modules_preset) }}"
+
+php_modules_preset:
+ - cli
+ - pgsql
+ - soap
+ - mcrypt
+ - mysqlnd
+ - gd
+ - xml
+ - common
+ - opcache
+ - fpm
+ - mbstring
+ - pdo
+ - ldap
+ - intl
+ - bcmath
+ - tidy
+ - pecl-apcu
+
+# webserver #
+
+php_webserver_enabled: True
+php_webserver_service_name: "httpd"
+
+# default templates #
+
+php_template_php_ini: "php.ini.{{ php_version.split('.')[0] }}{{ php_version.split('.')[1] }}.j2"
+php_template_php_fpm_conf: "php-fpm.conf.{{ php_version.split('.')[0] }}{{ php_version.split('.')[1] }}.j2"
+php_template_php_fpm_d_www_conf: "php-fpm.d_www.conf.{{ php_version.split('.')[0] }}{{ php_version.split('.')[1] }}.j2"
+
+# PHP Configuration #
+
+php_expose_php: "On"
+
+php_max_execution_time: "30"
+php_max_input_time: "60"
+php_max_input_vars: "1000"
+php_memory_limit: "128M"
+
+php_error_reporting: "E_ALL & ~E_DEPRECATED & ~E_STRICT"
+php_display_errors: "Off"
+php_display_startup_errors: "Off"
+
+php_post_max_size: "8M"
+php_upload_max_filesize: "2M"
+php_max_file_uploads: "20"
+
+php_allow_url_fopen: "On"
+php_default_socket_timeout: "60"
+
+php_sendmail_path: "/usr/sbin/sendmail -t -i"
+
+php_session_save_handler: "files"
+php_session_use_strict_mode: "0"
+php_session_use_cookies: "1"
+php_session_use_only_cookies: "1"
+php_session_auto_start: "0"
+php_session_cookie_lifetime: "0"
+php_session_gc_probability: "1"
+php_session_gc_divisor: "1000"
+php_session_gc_maxlifetime: "1440"
+
+php_date_timezone: ""
+
+# php-fpm configuration #
+
+php_fpm_pid: "/run/php-fpm/php-fpm.pid"
+php_fpm_error_log: "/var/log/php-fpm/error.log"
+php_fpm_daemonize: "yes"
+php_fpm_listen: "127.0.0.1:9000"
+php_fpm_listen_allowed_clients: "127.0.0.1"
+php_fpm_listen_mode: "0660"
+php_fpm_user: "apache"
+php_fpm_group: "apache"
+
+php_fpm_pm: "dynamic"
+php_fpm_pm_max_children: "50"
+php_fpm_pm_start_servers: "5"
+php_fpm_pm_min_spare_servers: "5"
+php_fpm_pm_max_spare_servers: "35"
+php_fpm_pm_max_requests: "0"
+
+# PHP repositories list #
+
+php_repositories:
+  - name: "webtatic"
+    pkg_url: "https://mirror.webtatic.com/yum/el7/webtatic-release.rpm"
+    key_url: "https://mirror.webtatic.com/yum/RPM-GPG-KEY-webtatic-el7"
+    suffix: "w"
+    version: "{{ php_version.split('.')[0] }}{{ php_version.split('.')[1] }}"
+    supported_versions:
+      - "5.5"
+      - "5.6"
+      - "7.0"
+      - "7.1"
+  - name: "webtatic-testing"
+    pkg_url: "https://mirror.webtatic.com/yum/el7/webtatic-release.rpm"
+    key_url: "https://mirror.webtatic.com/yum/RPM-GPG-KEY-webtatic-el7"
+    suffix: "w"
+    version: "{{ php_version.split('.')[0] }}{{ php_version.split('.')[1] }}"
+    enablerepo: "webtatic-testing"
+    supported_versions:
+      - "7.2"
+  - name: "remi"
+    pkg_url: "http://rpms.remirepo.net/enterprise/remi-release-7.rpm"
+    key_url: "https://rpms.remirepo.net/RPM-GPG-KEY-remi"
+    suffix: ""
+    version: ""
+    enablerepo: "remi-php{{ php_version.split('.')[0] }}{{ php_version.split('.')[1] }}"
+    supported_versions:
+      - "5.4"
+      - "5.5"
+      - "5.6"
+      - "7.0"
+      - "7.1"
+      - "7.2"
+  - name: "ius"
+    pkg_url: "https://{% if ansible_distribution == 'RedHat' %}rhel{% else %}centos{% endif %}7.iuscommunity.org/ius-release.rpm"
+    key_url: "https://dl.iuscommunity.org/pub/ius/IUS-COMMUNITY-GPG-KEY"
+    suffix: "u"
+    version: "{{ php_version.split('.')[0] }}{{ php_version.split('.')[1] }}"
+    supported_versions:
+      - "5.6"
+      - "7.0"
+      - "7.1"
+  - name: "base"
+    supported_versions:
+      - "5.4"
+
+php_version_repository_combination_check: True
+
+epel_url: "https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm"
+epel_key_path: "/etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-7"

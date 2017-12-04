@@ -1,0 +1,16 @@
+---
+# handlers file for php-ansible-role
+
+- name: restart webserver
+  systemd:
+    name: "{{ php_webserver_service_name }}"
+    state: restarted
+  when: php_webserver_enabled
+
+- name: restart php-fpm
+  systemd:
+    name: "php-fpm"
+    state: restarted
+  when: >
+    "fpm" in php_modules_to_install or
+    (php_modules_additional is defined and "fpm" in php_modules_additional)

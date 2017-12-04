@@ -1,0 +1,16 @@
+galaxy_info:
+  author: zaxos
+  description: Ansible role to install and configure PHP on CentOS/RHEL
+
+  license: MIT
+
+  min_ansible_version: 2.3
+
+  platforms:
+  - name: EL
+    versions:
+    - 7
+
+  galaxy_tags: [web,webserver,cloud,development,drupal,joomla,wordpress,php]
+
+dependencies: []

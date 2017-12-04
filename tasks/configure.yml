@@ -1,0 +1,45 @@
+---
+# tasks file for php-ansible-role
+
+- name: Apply php.ini config file
+  template:
+    src: "{{ php_template_php_ini }}"
+    dest: "/etc/php.ini"
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - restart webserver
+    - restart php-fpm
+
+- name: Apply php-fpm.conf config file
+  template:
+    src: "{{ php_template_php_fpm_conf }}"
+    dest: "/etc/php-fpm.conf"
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart php-fpm
+  when: >
+    "fpm" in php_modules_to_install or
+    (php_modules_additional is defined and "fpm" in php_modules_additional)
+
+- name: Apply php-fpm.d/www.conf config file
+  template:
+    src: "{{ php_template_php_fpm_d_www_conf }}"
+    dest: "/etc/php-fpm.d/www.conf"
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart php-fpm
+  when: >
+    "fpm" in php_modules_to_install or
+    (php_modules_additional is defined and "fpm" in php_modules_additional)
+
+- name: Enable php-fpm service
+  systemd:
+    name: php-fpm
+    enabled: yes
+  when: >
+    "fpm" in php_modules_to_install or
+    (php_modules_additional is defined and "fpm" in php_modules_additional)

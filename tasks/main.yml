@@ -1,0 +1,28 @@
+---
+# tasks file for php-ansible-role
+
+- name: Set role facts
+  set_fact:
+    repo: "{{ item.name }}"
+    repo_pkg_url: "{{ item.pkg_url | default(omit) }}"
+    repo_key_url: "{{ item.key_url | default(omit) }}"
+    repo_enablerepo: "{{ item.enablerepo | default(omit) }}"
+    repo_pkg_prefix: "php{{ item.version | default('') }}{{ item.suffix | default('') }}"
+    repo_supported_versions: "{{ item.supported_versions | default(['']) }}"
+  with_items: "{{ php_repositories }}"
+  when: "item.name == php_repository"
+
+- name: Check selected php version/repository combination compatibility
+  fail:
+    msg: "Wrong version/repository combination. Check compatibility matrix in role's README. - version: {{ php_version }}, repository:{{ repo }}"
+  when: >
+   php_version_repository_combination_check and
+   php_version not in repo_supported_versions and
+   "any" not in repo_supported_versions
+
+- name: Install php
+  include: install-EL.yml
+  when: ansible_os_family == "RedHat"
+
+- name: Configure php
+  include: configure.yml
