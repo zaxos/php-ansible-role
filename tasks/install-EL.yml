@@ -10,16 +10,18 @@
   rpm_key:
     key: "{{ epel_key_path }}"
 
-- name: Enable RHEL optional rpms repository
-  ini_file:
-    dest: /etc/yum.repos.d/redhat.repo
-    section: rhel-7-server-optional-rpms
-    option: enabled
-    value: 1
+- name: Check if RHEL optional rpms repository is enabled
+  command: subscription-manager repos --list-enabled
+  register: repos_enabled
+  changed_when: False
   when: >
     php_repository == "base" and
     ansible_distribution == "RedHat"
-    
+
+- name: Enable RHEL optional rpms repository
+  command: subscription-manager repos --enable rhel-7-server-optional-rpms
+  when: "'rhel-7-server-optional-rpms' not in repos_enabled.stdout"
+
 - name: Add {% if repo_key_url is defined %}{{repo}} {% endif %}repository signing key
   rpm_key: 
     key: "{{ repo_key_url }}"
