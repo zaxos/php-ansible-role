@@ -45,8 +45,8 @@ listen = {{ php_fpm_listen }}
 ; permissions must be set in order to allow connections from a web server.
 ; Default Values: user and group are set as the running user
 ;                 mode is set to 0660
-;listen.owner = nobody
-;listen.group = nobody
+listen.owner = {{ php_fpm_listen_owner }}
+listen.group = {{ php_fpm_listen_group }}
 listen.mode = {{ php_fpm_listen_mode }}
 
 ; When POSIX Access Control Lists are supported you can set them using

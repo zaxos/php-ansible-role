@@ -77,9 +77,13 @@ php_date_timezone: ""
 php_fpm_pid: "/run/php-fpm/php-fpm.pid"
 php_fpm_error_log: "/var/log/php-fpm/error.log"
 php_fpm_daemonize: "yes"
+
 php_fpm_listen: "127.0.0.1:9000"
 php_fpm_listen_allowed_clients: "127.0.0.1"
-php_fpm_listen_mode: "0660"
+php_fpm_listen_owner: ""
+php_fpm_listen_group: ""
+php_fpm_listen_mode: ""
+
 php_fpm_user: "apache"
 php_fpm_group: "apache"
 
