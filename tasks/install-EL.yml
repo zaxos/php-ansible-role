@@ -20,7 +20,10 @@
 
 - name: Enable RHEL optional rpms repository
   command: subscription-manager repos --enable rhel-7-server-optional-rpms
-  when: "'rhel-7-server-optional-rpms' not in repos_enabled.stdout"
+  when: >
+    php_repository == "base" and
+    ansible_distribution == "RedHat" and
+    "rhel-7-server-optional-rpms" not in repos_enabled.stdout
 
 - name: Add {% if repo_key_url is defined %}{{repo}} {% endif %}repository signing key
   rpm_key: 
