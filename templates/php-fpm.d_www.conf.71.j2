@@ -425,3 +425,11 @@ php_value[session.save_path]    = /var/lib/php/session
 php_value[soap.wsdl_cache_dir]  = /var/lib/php/wsdlcache
 ;php_value[opcache.file_cache]  = /var/lib/php/opcache
 
+{% if php_fpm_d_www_extra %}
+{% for key,value in php_fpm_d_www_extra.items() %}
+{{ key }} = {{ value }}
+{% endfor %}
+{% endif %}
+{% if php_fpm_d_www_extra_raw %}
+{{ php_fpm_d_www_extra_raw }}
+{% endif %}

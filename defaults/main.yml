@@ -90,6 +90,9 @@ php_fpm_pm_min_spare_servers: "5"
 php_fpm_pm_max_spare_servers: "35"
 php_fpm_pm_max_requests: "0"
 
+php_fpm_d_www_extra: {}
+php_fpm_d_www_extra_raw: ""
+
 # PHP repositories list #
 
 php_repositories:

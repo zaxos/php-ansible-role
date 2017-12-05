@@ -231,3 +231,11 @@ php_admin_flag[log_errors] = on
 php_value[session.save_handler] = files
 php_value[session.save_path] = /var/lib/php/session
 
+{% if php_fpm_d_www_extra %}
+{% for key,value in php_fpm_d_www_extra.items() %}
+{{ key }} = {{ value }}
+{% endfor %}
+{% endif %}
+{% if php_fpm_d_www_extra_raw %}
+{{ php_fpm_d_www_extra_raw }}
+{% endif %}
