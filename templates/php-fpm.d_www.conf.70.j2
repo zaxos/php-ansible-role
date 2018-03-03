@@ -35,13 +35,20 @@ group = {{ php_fpm_group }}
 ;                            (IPv6 and IPv4-mapped) on a specific port;
 ;   '/path/to/unix/socket' - to listen on a unix socket.
 ; Note: This value is mandatory.
-listen.owner = {{ php_fpm_listen_owner }}
-listen.group = {{ php_fpm_listen_group }}
-listen.mode = {{ php_fpm_listen_mode }}
+
+listen = {{ php_fpm_listen }}
 
 ; Set listen(2) backlog.
 ; Default Value: 511
 ;listen.backlog = 511
+
+; Set permissions for unix socket, if one is used. In Linux, read/write
+; permissions must be set in order to allow connections from a web server.
+; Default Values: user and group are set as the running user
+;                 mode is set to 0660
+listen.owner = {{ php_fpm_listen_owner }}
+listen.group = {{ php_fpm_listen_group }}
+listen.mode = {{ php_fpm_listen_mode }}
 
 ; Set permissions for unix socket, if one is used. In Linux, read/write
 ; permissions must be set in order to allow connections from a web server.
