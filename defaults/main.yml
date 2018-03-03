@@ -110,6 +110,7 @@ php_repositories:
       - "5.6"
       - "7.0"
       - "7.1"
+      - "7.2"
   - name: "webtatic-testing"
     pkg_url: "https://mirror.webtatic.com/yum/el7/webtatic-release.rpm"
     key_url: "https://mirror.webtatic.com/yum/RPM-GPG-KEY-webtatic-el7"
@@ -140,6 +141,7 @@ php_repositories:
       - "5.6"
       - "7.0"
       - "7.1"
+      - "7.2"
   - name: "base"
     supported_versions:
       - "5.4"
